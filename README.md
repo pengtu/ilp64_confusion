@@ -32,3 +32,90 @@ make clean; make LINK_MKL=1
 ```
 
 This will run the above tests, and result in the same problems, except for the last invocation which will work, due to the driver program not already having `libmkl_intel_*` bound in with `RTLD_GLOBAL`.
+
+
+# Example output:
+```
+$ make
+Running code expecting LP64 on LP64 mkl (should work)
+./foo LOAD_MKL_LP64 CALL_LP64
+Loading libmkl_core.so...
+Loading libmkl_sequential.so...
+Loading libmkl_intel_lp64.so...
+Loading ./libddot-lp64.so...
+ - ddot(): sizeof(MKL_INT) == 4
+ - result: 285
+
+Running code expecting ILP64 on ILP64 mkl (should work)
+./foo LOAD_MKL_ILP64 CALL_ILP64
+Loading libmkl_core.so...
+Loading libmkl_sequential.so...
+Loading libmkl_intel_ilp64.so...
+Loading ./libddot-ilp64.so...
+ - ddot(): sizeof(MKL_INT) == 8
+ - result: 285
+
+Running code expecting LP64 on ILP64 mkl (BROKEN)
+./foo LOAD_MKL_ILP64 CALL_LP64
+Makefile:30: recipe for target 'run' failed
+
+Running code expecting ILP64 on LP64 mkl (BROKEN)
+./foo LOAD_MKL_LP64 CALL_ILP64
+Loading libmkl_core.so...
+Loading libmkl_sequential.so...
+Loading libmkl_intel_lp64.so...
+Loading ./libddot-ilp64.so...
+ - ddot(): sizeof(MKL_INT) == 8
+ - result: 60
+
+Running LP64 code after running ILP64 code (BROKEN)
+./foo LOAD_MKL_ILP64 CALL_ILP64 CALL_LP64
+Makefile:30: recipe for target 'run' failed
+
+Running LP64 code after running ILP64 code (with no explicit loading) (INCOMPATIBLE WITH JULIA)
+./foo CALL_ILP64 CALL_LP64
+Makefile:30: recipe for target 'run' failed
+
+Running code expecting LP64 on LP64 mkl (should work)
+./foo LOAD_MKL_LP64 CALL_LP64
+Loading libmkl_core.so...
+Loading libmkl_sequential.so...
+Loading libmkl_intel_lp64.so...
+Loading ./libddot-lp64.so...
+ - ddot(): sizeof(MKL_INT) == 4
+ - result: 285
+
+Running code expecting ILP64 on ILP64 mkl (should work)
+./foo LOAD_MKL_ILP64 CALL_ILP64
+Loading libmkl_core.so...
+Loading libmkl_sequential.so...
+Loading libmkl_intel_ilp64.so...
+Loading ./libddot-ilp64.so...
+ - ddot(): sizeof(MKL_INT) == 8
+ - result: 285
+
+Running code expecting LP64 on ILP64 mkl (BROKEN)
+./foo LOAD_MKL_ILP64 CALL_LP64
+Makefile:30: recipe for target 'run' failed
+make: [run] Segmentation fault (ignored)
+
+Running code expecting ILP64 on LP64 mkl (BROKEN)
+./foo LOAD_MKL_LP64 CALL_ILP64
+Loading libmkl_core.so...
+Loading libmkl_sequential.so...
+Loading libmkl_intel_lp64.so...
+Loading ./libddot-ilp64.so...
+ - ddot(): sizeof(MKL_INT) == 8
+ - result: 60
+
+Running LP64 code after running ILP64 code (BROKEN)
+./foo LOAD_MKL_ILP64 CALL_ILP64 CALL_LP64
+Makefile:30: recipe for target 'run' failed
+make: [run] Segmentation fault (ignored)
+
+Running LP64 code after running ILP64 code (with no explicit loading) (INCOMPATIBLE WITH JULIA)
+./foo CALL_ILP64 CALL_LP64
+./foo: symbol lookup error: ./libddot-ilp64.so: undefined symbol: cblas_ddoti
+Makefile:30: recipe for target 'run' failed
+make: [run] Error 127 (ignored)
+```
