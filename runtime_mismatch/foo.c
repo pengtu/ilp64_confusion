@@ -37,7 +37,7 @@ int main(int argc, char const *argv[])
     // First, open ILP64 MKL
     open_lib("libmkl_core.so");
     open_lib("libmkl_sequential.so");
-    open_lib("libmkl_intel_ilp64.so");
+    open_lib("libmkl_intel_ilp64_.so");
 
     // Next, load the given .so file and run its ddot test
     run_ddot("./libddot.so");

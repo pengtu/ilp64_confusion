@@ -1,13 +1,10 @@
-#include <stdio.h>
-#include <dlfcn.h>
-#include <string.h>
-#include <stdlib.h>
 #include "mkl_cblas.h"
+#include <stdio.h>
 
 extern double cblas_ddoti64_(const MKL_INT N, const double *X, const MKL_INT *indx, const double *Y);
-int main(int argc, char const *argv[])
+int do_ddot()
 {
-    printf("sizeof(MKL_INT) == %ld\n", sizeof(MKL_INT));
+    printf(" - ddot(): sizeof(MKL_INT) == %ld\n", sizeof(MKL_INT));
     MKL_INT n = 10;
     MKL_INT indices[n];
     double x[n];
@@ -19,7 +16,6 @@ int main(int argc, char const *argv[])
     }
 
     double a = cblas_ddoti64_(n, x, indices, x);
-    //    double a = cblas_ddoti(n, x, indices, x);
-    printf("a: %g\n", a);
-    return 0;
+    return a;
 }
+

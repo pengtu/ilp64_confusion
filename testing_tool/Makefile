@@ -1,18 +1,18 @@
 all: run
 
-MKL_ROOT=/opt/intel/mkl
-CPPFLAGS += -I$(MKL_ROOT)/include -O0
+MKL_ROOT=/export/users/ptu1/workspace/mkl/src/__release_lnx/mkl
+CPPFLAGS += -I$(MKL_ROOT)/include -O0 -std=c99 -fPIC
 LDFLAGS += -ldl -Wl,-rpath,$(MKL_ROOT)/lib/intel64
 
 ifneq ($(LINK_MKL),)
 # If we're using the compiler to do our linking (disable GCC's tendency to drop mkl_sequential and mkl_core)
 LDFLAGS += -L$(MKL_ROOT)/lib/intel64 -Wl,--no-as-needed
 LINK_MKL_LP64  = -lmkl_sequential -lmkl_core -lmkl_intel_lp64
-LINK_MKL_ILP64 = -lmkl_sequential -lmkl_core -lmkl_intel_ilp64
+LINK_MKL_ILP64 = -lmkl_sequential -lmkl_core -lmkl_intel_ilp64_
 endif
 
 # We will build libddot against both ilp64 and lp64 MKL
-libddot-ilp64.so: ddot.c
+libddot-ilp64.so: ddot_ilp64.c
 	$(CC) $< -g -shared -DMKL_ILP64=1 $(CPPFLAGS) $(LDFLAGS) $(LINK_MKL_ILP64) -o $@
 libddot-lp64.so: ddot.c
 	$(CC) $< -g -shared $(CPPFLAGS) $(LDFLAGS) $(LINK_MKL_LP64) -o $@

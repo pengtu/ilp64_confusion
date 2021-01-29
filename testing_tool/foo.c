@@ -51,7 +51,7 @@ int main(int argc, char const *argv[])
         if(strcmp(argv[idx], "LOAD_MKL_ILP64") == 0) {
             open_lib("libmkl_core.so");
             open_lib("libmkl_sequential.so");
-            open_lib("libmkl_intel_ilp64.so");
+            open_lib("libmkl_intel_ilp64_.so");
         }
         // This force-loads LP64 MKL into our current process
         if(strcmp(argv[idx], "LOAD_MKL_LP64") == 0) {
