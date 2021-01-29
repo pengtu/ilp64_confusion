@@ -1,14 +1,14 @@
 all: run
 
-MKL_ROOT=/export/users/ptu1/workspace/mkl/src/__release_lnx/mkl
+MKL_ROOT=/home/peng/Downloads/mkl
 CPPFLAGS += -I$(MKL_ROOT)/include -O0 -std=c99 -fPIC
 LDFLAGS += -ldl -Wl,-rpath,$(MKL_ROOT)/lib/intel64
 
 ifneq ($(LINK_MKL),)
 # If we're using the compiler to do our linking (disable GCC's tendency to drop mkl_sequential and mkl_core)
 LDFLAGS += -L$(MKL_ROOT)/lib/intel64 -Wl,--no-as-needed
-LINK_MKL_LP64  = -lmkl_sequential -lmkl_core -lmkl_intel_lp64
-LINK_MKL_ILP64 = -lmkl_sequential -lmkl_core -lmkl_intel_ilp64_
+LINK_MKL_LP64  = -lmkl_sequential -lmkl_intel_lp64 -lmkl_core
+LINK_MKL_ILP64 = -lmkl_sequential -lmkl_intel_ilp64_ -lmkl_core
 endif
 
 # We will build libddot against both ilp64 and lp64 MKL
